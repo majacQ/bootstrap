@@ -371,14 +371,26 @@ class Tooltip extends BaseComponent {
     const element = document.createElement('div')
     element.innerHTML = this._config.template
 
-    this.tip = element.children[0]
+    const tip = element.children[0]
+    tip.classList.remove(CLASS_NAME_FADE, CLASS_NAME_SHOW)
+
+    this.tip = tip
     return this.tip
   }
 
   setContent() {
     const tip = this.getTipElement()
-    this.setElementContent(SelectorEngine.findOne(SELECTOR_TOOLTIP_INNER, tip), this.getTitle())
-    tip.classList.remove(CLASS_NAME_FADE, CLASS_NAME_SHOW)
+    this._sanitizeAndSetContent(tip, this.getTitle(), SELECTOR_TOOLTIP_INNER)
+  }
+
+  _sanitizeAndSetContent(template, content, selector) {
+    const templateElement = SelectorEngine.findOne(selector, template)
+    if (!content) {
+      templateElement.remove()
+      return
+    }
+
+    this.setElementContent(templateElement, content)
   }
 
   setElementContent(element, content) {
@@ -414,15 +426,9 @@ class Tooltip extends BaseComponent {
   }
 
   getTitle() {
-    let title = this._element.getAttribute('data-bs-original-title')
+    const title = Manipulator.getDataAttribute(this._element, 'original-title') || this._config.title
 
-    if (!title) {
-      title = typeof this._config.title === 'function' ?
-        this._config.title.call(this._element) :
-        this._config.title
-    }
-
-    return title
+    return this._parseContent(title)
   }
 
   updateAttachment(attachment) {
@@ -440,15 +446,7 @@ class Tooltip extends BaseComponent {
   // Private
 
   _initializeOnDelegatedTarget(event, context) {
-    const dataKey = this.constructor.DATA_KEY
-    context = context || Data.get(event.delegateTarget, dataKey)
-
-    if (!context) {
-      context = new this.constructor(event.delegateTarget, this._getDelegateConfig())
-      Data.set(event.delegateTarget, dataKey, context)
-    }
-
-    return context
+    return context || this.constructor.getOrCreateInstance(event.delegateTarget, this._getDelegateConfig())
   }
 
   _getOffset() {
@@ -463,6 +461,10 @@ class Tooltip extends BaseComponent {
     }
 
     return offset
+  }
+
+  _parseContent(content) {
+    return typeof content === 'function' ? content.call(this._element) : content
   }
 
   _getPopperConfig(attachment) {
@@ -684,17 +686,7 @@ class Tooltip extends BaseComponent {
   }
 
   _getDelegateConfig() {
-    const config = {}
-
-    if (this._config) {
-      for (const key in this._config) {
-        if (this.constructor.Default[key] !== this._config[key]) {
-          config[key] = this._config[key]
-        }
-      }
-    }
-
-    return config
+    return { ...this.constructor.Default, ...this._config }
   }
 
   _cleanTipClass() {

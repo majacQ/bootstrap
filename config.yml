@@ -1,7 +1,13 @@
 languageCode:           "en"
 title:                  "Bootstrap"
-baseURL:                "https://v5.getbootstrap.com"
-enableInlineShortcodes: true
+baseURL:                "https://getbootstrap.com"
+
+security:
+  enableInlineShortcodes: true
+  funcs:
+    getenv:
+      - ^HUGO_
+      - NETLIFY
 
 markup:
   goldmark:
@@ -18,14 +24,14 @@ buildFuture:            true
 
 enableRobotsTXT:        true
 metaDataFormat:         "yaml"
-disableKinds:           ["404", "taxonomy", "taxonomyTerm", "RSS"]
+disableKinds:           ["404", "taxonomy", "term", "RSS"]
 
-publishDir:             "_gh_pages"
+publishDir:             "_site"
 
 module:
   mounts:
     - source:           dist
-      target:           static/docs/5.0/dist
+      target:           static/docs/5.1/dist
     - source:           site/assets
       target:           assets
     - source:           site/content
@@ -36,21 +42,21 @@ module:
       target:           layouts
     - source:           site/static
       target:           static
-    - source:           site/static/docs/5.0/assets/img/favicons/apple-touch-icon.png
+    - source:           site/static/docs/5.1/assets/img/favicons/apple-touch-icon.png
       target:           static/apple-touch-icon.png
-    - source:           site/static/docs/5.0/assets/img/favicons/favicon.ico
+    - source:           site/static/docs/5.1/assets/img/favicons/favicon.ico
       target:           static/favicon.ico
 
 params:
   description:          "The most popular HTML, CSS, and JS library in the world."
   authors:              "Mark Otto, Jacob Thornton, and Bootstrap contributors"
-  social_image_path:    /docs/5.0/assets/brand/bootstrap-social.png
-  social_logo_path:     /docs/5.0/assets/brand/bootstrap-social-logo.png
+  social_image_path:    /docs/5.1/assets/brand/bootstrap-social.png
+  social_logo_path:     /docs/5.1/assets/brand/bootstrap-social-logo.png
 
-  current_version:      "5.0.0-alpha3"
-  current_ruby_version: "5.0.0.alpha3"
-  docs_version:         "5.0"
-  rfs_version:          "9.0.3"
+  current_version:      "5.1.3"
+  current_ruby_version: "5.1.3"
+  docs_version:         "5.1"
+  rfs_version:          "v9.0.6"
   github_org:           "https://github.com/twbs"
   repo:                 "https://github.com/twbs/bootstrap"
   twitter:              "getbootstrap"
@@ -61,17 +67,23 @@ params:
   icons:                "https://icons.getbootstrap.com/"
 
   download:
-    source:             "https://github.com/twbs/bootstrap/archive/v5.0.0-alpha3.zip"
-    dist:               "https://github.com/twbs/bootstrap/releases/download/v5.0.0-alpha3/bootstrap-5.0.0-alpha3-dist.zip"
-    dist_examples:      "https://github.com/twbs/bootstrap/releases/download/v5.0.0-alpha3/bootstrap-5.0.0-alpha3-examples.zip"
+    source:             "https://github.com/twbs/bootstrap/archive/v5.1.3.zip"
+    dist:               "https://github.com/twbs/bootstrap/releases/download/v5.1.3/bootstrap-5.1.3-dist.zip"
+    dist_examples:      "https://github.com/twbs/bootstrap/releases/download/v5.1.3/bootstrap-5.1.3-examples.zip"
 
   cdn:
     # See https://www.srihash.org for info on how to generate the hashes
-    css:              "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css"
-    css_hash:         "sha384-CuOF+2SnTUfTwSZjCXf01h7uYhfOBuxIhGKPbfEJ3+FqH/s6cIFN9bGr1HmAg4fQ"
-    js:               "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.min.js"
-    js_hash:          "sha384-t6I8D5dJmMXjCsRLhSzCltuhNZg6P10kE0m0nAncLUjH6GeYLhRU1zfLoW3QNQDF"
-    js_bundle:        "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"
-    js_bundle_hash:   "sha384-popRpmFF9JQgExhfw5tZT4I9/CI5e2QcuUZPOVXb1m7qUmeR2b50u+YFEYe1wgzy"
-    popper:           "https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    popper_hash:      "sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    css:              "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    css_hash:         "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+    css_rtl:          "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css"
+    css_rtl_hash:     "sha384-+qdLaIRZfNu4cVPK/PxJJEy0B0f3Ugv8i482AKY7gwXwhaCroABd086ybrVKTa0q"
+    js:               "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    js_hash:          "sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    js_bundle:        "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    js_bundle_hash:   "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    popper:           "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js"
+    popper_hash:      "sha384-q9CRHqZndzlxGLOj+xrdLDJa9ittGte1NksRmgJKeCV9DrM7Kz868XYqsKWPpAmn"
+
+  anchors:
+    min: 2
+    max: 5

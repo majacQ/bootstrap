@@ -1,3 +1,6 @@
+# This file holds all sidebar menu's entries.
+# The logic for the sidebar generation is in "site/layouts/partials/docs-sidebar.html".
+
 - title: Getting started
   pages:
     - title: Introduction
@@ -5,10 +8,12 @@
     - title: Contents
     - title: Browsers & devices
     - title: JavaScript
-    - title: Build tools
     - title: Webpack
+    - title: Parcel
     - title: Accessibility
     - title: RFS
+    - title: RTL
+    - title: Contribute
 
 - title: Customize
   pages:
@@ -25,11 +30,11 @@
     - title: Breakpoints
     - title: Containers
     - title: Grid
-    # - title: Rows
     - title: Columns
     - title: Gutters
     - title: Utilities
     - title: Z-index
+    - title: CSS Grid
 
 - title: Content
   pages:
@@ -68,7 +73,9 @@
     - title: Modal
     - title: Navs & tabs
     - title: Navbar
+    - title: Offcanvas
     - title: Pagination
+    - title: Placeholders
     - title: Popovers
     - title: Progress
     - title: Scrollspy
@@ -82,19 +89,23 @@
     - title: Colored links
     - title: Ratio
     - title: Position
+    - title: Stacks
     - title: Visually hidden
     - title: Stretched link
     - title: Text truncation
+    - title: Vertical rule
 
 - title: Utilities
   pages:
     - title: API
+    - title: Background
     - title: Borders
     - title: Colors
     - title: Display
     - title: Flex
     - title: Float
     - title: Interactions
+    - title: Opacity
     - title: Overflow
     - title: Position
     - title: Shadows
@@ -116,3 +127,5 @@
     - title: Brand
     - title: License
     - title: Translations
+
+- title: Migration

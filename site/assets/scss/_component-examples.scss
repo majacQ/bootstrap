@@ -23,6 +23,21 @@
   background-color: rgba(255, 0, 0, .1);
 }
 
+.bd-example-cssgrid {
+  text-align: center;
+
+  .grid + .grid {
+    margin-top: 1rem;
+  }
+
+  .grid > * {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    background-color: rgba(255, 0, 255, .1);
+    border: 1px solid rgba(255, 0, 255, .25);
+  }
+}
+
 .bd-highlight {
   background-color: rgba($bd-purple, .15);
   border: 1px solid rgba($bd-purple, .15);
@@ -70,7 +85,7 @@
 .bd-example {
   position: relative;
   padding: 1rem;
-  margin: 1rem (-$grid-gutter-width / 2) 0;
+  margin: 1rem ($bd-gutter-x * -1) 0;
   border: solid $gray-300;
   border-width: 1px 0 0;
   @include clearfix();
@@ -113,6 +128,10 @@
     margin-bottom: 0;
   }
 
+  > hr:last-child {
+    margin-bottom: $spacer;
+  }
+
   // Images
   > svg + svg,
   > img + img {
@@ -144,7 +163,8 @@
     margin: -1rem -1rem 1rem;
   }
 
-  .fixed-bottom {
+  .fixed-bottom,
+  .sticky-bottom {
     position: static;
     margin: 1rem -1rem -1rem;
   }
@@ -154,7 +174,8 @@
     .sticky-top {
       margin: -1.5rem -1.5rem 1rem;
     }
-    .fixed-bottom {
+    .fixed-bottom,
+    .sticky-bottom {
       margin: 1rem -1.5rem -1.5rem;
     }
   }
@@ -173,7 +194,7 @@
     width: 10rem;
     color: $gray-600;
     background-color: $gray-100;
-    border: $border-width solid $border-color;
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
 
     > div {
       display: flex;
@@ -187,7 +208,7 @@
     width: 16rem;
 
     @include media-breakpoint-up(md) {
-      --aspect-ratio: 50%; // 2x1
+      --bs-aspect-ratio: 50%; // 2x1
     }
   }
 }
@@ -201,10 +222,37 @@
   }
 }
 
+.bd-example-offcanvas {
+  @include border-start-radius(0);
+
+  .offcanvas {
+    position: static;
+    display: block;
+    height: 200px;
+    visibility: visible;
+    transform: translate(0);
+  }
+}
+
 // Tooltips
 .tooltip-demo a {
   white-space: nowrap;
 }
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-primary);
+}
+
+// scss-docs-start custom-popovers
+.custom-popover {
+  --bs-popover-max-width: 200px;
+  --bs-popover-border-color: var(--bs-primary);
+  --bs-popover-header-bg: var(--bs-primary);
+  --bs-popover-header-color: var(--bs-white);
+  --bs-popover-body-padding-x: 1rem;
+  --bs-popover-body-padding-y: .5rem;
+}
+// scss-docs-end custom-popovers
 
 // Scrollspy demo on fixed height div
 .scrollspy-example {
@@ -232,7 +280,7 @@
 
 .bd-example-border-utils-0 {
   [class^="border"] {
-    border: 1px solid $border-color;
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
   }
 }
 
@@ -265,12 +313,28 @@
   }
 }
 
+// Placeholders
+.bd-example-placeholder-cards {
+  &::after {
+    display: none;
+  }
+
+  .card {
+    width: 18rem;
+  }
+}
+
+// Toasts
+.bd-example-toasts {
+  min-height: 240px;
+}
+
 //
 // Code snippets
 //
 
 .highlight {
-  padding: 1rem;
+  padding: var(--bs-gutter-x) $bd-gutter-x;
   margin-bottom: 1rem;
   background-color: $gray-100;
 
@@ -295,8 +359,8 @@
 }
 
 .bd-content .highlight {
-  margin-right: (-$grid-gutter-width / 2);
-  margin-left: (-$grid-gutter-width / 2);
+  margin-right: $bd-gutter-x * -1;
+  margin-left: $bd-gutter-x * -1;
 
   @include media-breakpoint-up(sm) {
     margin-right: 0;

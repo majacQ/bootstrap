@@ -1,28 +1,28 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.0.0-alpha3): dom/manipulator.js
+ * Bootstrap (v5.1.3): dom/manipulator.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 
-function normalizeData(val) {
-  if (val === 'true') {
+function normalizeData(value) {
+  if (value === 'true') {
     return true
   }
 
-  if (val === 'false') {
+  if (value === 'false') {
     return false
   }
 
-  if (val === Number(val).toString()) {
-    return Number(val)
+  if (value === Number(value).toString()) {
+    return Number(value)
   }
 
-  if (val === '' || val === 'null') {
+  if (value === '' || value === 'null') {
     return null
   }
 
-  return val
+  return value
 }
 
 function normalizeDataKey(key) {
@@ -31,11 +31,11 @@ function normalizeDataKey(key) {
 
 const Manipulator = {
   setDataAttribute(element, key, value) {
-    element.setAttribute(`data-${normalizeDataKey(key)}`, value)
+    element.setAttribute(`data-bs-${normalizeDataKey(key)}`, value)
   },
 
   removeDataAttribute(element, key) {
-    element.removeAttribute(`data-${normalizeDataKey(key)}`)
+    element.removeAttribute(`data-bs-${normalizeDataKey(key)}`)
   },
 
   getDataAttributes(element) {
@@ -44,28 +44,27 @@ const Manipulator = {
     }
 
     const attributes = {}
+    const bsKeys = Object.keys(element.dataset).filter(key => key.startsWith('bs'))
 
-    Object.keys(element.dataset)
-      .filter(key => key.startsWith('bs'))
-      .forEach(key => {
-        let pureKey = key.replace(/^bs/, '')
-        pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1, pureKey.length)
-        attributes[pureKey] = normalizeData(element.dataset[key])
-      })
+    for (const key of bsKeys) {
+      let pureKey = key.replace(/^bs/, '')
+      pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1, pureKey.length)
+      attributes[pureKey] = normalizeData(element.dataset[key])
+    }
 
     return attributes
   },
 
   getDataAttribute(element, key) {
-    return normalizeData(element.getAttribute(`data-${normalizeDataKey(key)}`))
+    return normalizeData(element.getAttribute(`data-bs-${normalizeDataKey(key)}`))
   },
 
   offset(element) {
     const rect = element.getBoundingClientRect()
 
     return {
-      top: rect.top + document.body.scrollTop,
-      left: rect.left + document.body.scrollLeft
+      top: rect.top + window.pageYOffset,
+      left: rect.left + window.pageXOffset
     }
   },
 

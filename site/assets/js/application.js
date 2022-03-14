@@ -4,13 +4,13 @@
 
 /*!
  * JavaScript for Bootstrap's docs (https://getbootstrap.com/)
- * Copyright 2011-2020 The Bootstrap Authors
- * Copyright 2011-2020 Twitter, Inc.
+ * Copyright 2011-2022 The Bootstrap Authors
+ * Copyright 2011-2022 Twitter, Inc.
  * Licensed under the Creative Commons Attribution 3.0 Unported License.
  * For details, see https://creativecommons.org/licenses/by/3.0/.
  */
 
-/* global ClipboardJS: false, anchors: false, bootstrap: false */
+/* global ClipboardJS: false, bootstrap: false */
 
 (function () {
   'use strict'
@@ -28,7 +28,18 @@
       new bootstrap.Popover(popover)
     })
 
-  document.querySelectorAll('.toast')
+  var toastPlacement = document.getElementById('toastPlacement')
+  if (toastPlacement) {
+    document.getElementById('selectToastPlacement').addEventListener('change', function () {
+      if (!toastPlacement.dataset.originalClass) {
+        toastPlacement.dataset.originalClass = toastPlacement.className
+      }
+
+      toastPlacement.className = toastPlacement.dataset.originalClass + ' ' + this.value
+    })
+  }
+
+  document.querySelectorAll('.bd-example .toast')
     .forEach(function (toastNode) {
       var toast = new bootstrap.Toast(toastNode, {
         autohide: false
@@ -36,6 +47,32 @@
 
       toast.show()
     })
+
+  var toastTrigger = document.getElementById('liveToastBtn')
+  var toastLiveExample = document.getElementById('liveToast')
+  if (toastTrigger) {
+    toastTrigger.addEventListener('click', function () {
+      var toast = new bootstrap.Toast(toastLiveExample)
+
+      toast.show()
+    })
+  }
+
+  var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+  var alertTrigger = document.getElementById('liveAlertBtn')
+
+  function alert(message, type) {
+    var wrapper = document.createElement('div')
+    wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+
+    alertPlaceholder.append(wrapper)
+  }
+
+  if (alertTrigger) {
+    alertTrigger.addEventListener('click', function () {
+      alert('Nice, you triggered this alert message!', 'success')
+    })
+  }
 
   // Demos within modals
   document.querySelectorAll('.tooltip-test')
@@ -57,8 +94,8 @@
   // Disable empty links in docs examples
   document.querySelectorAll('.bd-content [href="#"]')
     .forEach(function (link) {
-      link.addEventListener('click', function (e) {
-        e.preventDefault()
+      link.addEventListener('click', function (event) {
+        event.preventDefault()
       })
     })
 
@@ -80,27 +117,22 @@
     })
   }
 
-  // Activate animated progress bar
-  var btnToggleAnimatedProgress = document.getElementById('btnToggleAnimatedProgress')
-  if (btnToggleAnimatedProgress) {
-    btnToggleAnimatedProgress.addEventListener('click', function () {
-      btnToggleAnimatedProgress.parentNode
-        .querySelector('.progress-bar-striped')
-        .classList
-        .toggle('progress-bar-animated')
-    })
-  }
-
   // Insert copy to clipboard button before .highlight
-  var btnHtml = '<div class="bd-clipboard"><button type="button" class="btn-clipboard" title="Copy to clipboard">Copy</button></div>'
+  var btnTitle = 'Copy to clipboard'
+  var btnHtml = '<div class="bd-clipboard"><button type="button" class="btn-clipboard">Copy</button></div>'
   document.querySelectorAll('div.highlight')
     .forEach(function (element) {
       element.insertAdjacentHTML('beforebegin', btnHtml)
     })
 
-  document.querySelectorAll('.btn-clipboard')
-    .forEach(function (btn) {
-      var tooltipBtn = new bootstrap.Tooltip(btn)
+  /**
+   *
+   * @param {string} selector
+   * @param {string} title
+   */
+  function snippetButtonTooltip(selector, title) {
+    document.querySelectorAll(selector).forEach(function (btn) {
+      var tooltipBtn = new bootstrap.Tooltip(btn, { title: title })
 
       btn.addEventListener('mouseleave', function () {
         // Explicitly hide tooltip, since after clicking it remains
@@ -109,6 +141,10 @@
         tooltipBtn.hide()
       })
     })
+  }
+
+  snippetButtonTooltip('.btn-clipboard', 'Copy to clipboard')
+  snippetButtonTooltip('.btn-edit', 'Edit on Stackblitz')
 
   var clipboard = new ClipboardJS('.btn-clipboard', {
     target: function (trigger) {
@@ -116,29 +152,24 @@
     }
   })
 
-  clipboard.on('success', function (e) {
-    var tooltipBtn = bootstrap.Tooltip.getInstance(e.trigger)
+  clipboard.on('success', function (event) {
+    var tooltipBtn = bootstrap.Tooltip.getInstance(event.trigger)
 
-    e.trigger.setAttribute('data-bs-original-title', 'Copied!')
-    tooltipBtn.show()
-
-    e.trigger.setAttribute('data-bs-original-title', 'Copy to clipboard')
-    e.clearSelection()
+    tooltipBtn.setContent({ '.tooltip-inner': 'Copied!' })
+    event.trigger.addEventListener('hidden.bs.tooltip', function () {
+      tooltipBtn.setContent({ '.tooltip-inner': btnTitle })
+    }, { once: true })
+    event.clearSelection()
   })
 
-  clipboard.on('error', function (e) {
+  clipboard.on('error', function (event) {
     var modifierKey = /mac/i.test(navigator.userAgent) ? '\u2318' : 'Ctrl-'
     var fallbackMsg = 'Press ' + modifierKey + 'C to copy'
-    var tooltipBtn = bootstrap.Tooltip.getInstance(e.trigger)
+    var tooltipBtn = bootstrap.Tooltip.getInstance(event.trigger)
 
-    e.trigger.setAttribute('data-bs-original-title', fallbackMsg)
-    tooltipBtn.show()
-
-    e.trigger.setAttribute('data-bs-original-title', 'Copy to clipboard')
+    tooltipBtn.setContent({ '.tooltip-inner': fallbackMsg })
+    event.trigger.addEventListener('hidden.bs.tooltip', function () {
+      tooltipBtn.setContent({ '.tooltip-inner': btnTitle })
+    }, { once: true })
   })
-
-  anchors.options = {
-    icon: '#'
-  }
-  anchors.add('.bd-content > h2, .bd-content > h3, .bd-content > h4, .bd-content > h5')
 })()
